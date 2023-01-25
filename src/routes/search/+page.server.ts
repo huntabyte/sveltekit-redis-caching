@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ url, fetch, setHeaders }) => {
 	}
 
 	const getMovies = async (q: string) => {
-		console.log("Made 3rd Party API Call - +$0.01")
+		console.log("Made 3rd Party API Call")
 		console.log(
 			"Your monthly total is now $",
 			(apiBill += 0.01).toFixed(2),
