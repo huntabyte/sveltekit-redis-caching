@@ -4,7 +4,7 @@ import { TMDB_API_KEY } from "$env/static/private"
 
 let apiBill = 0.0
 
-export const load: PageServerLoad = async ({ url, fetch, setHeaders }) => {
+export const load: PageServerLoad = async ({ url, fetch }) => {
 	const q = url.searchParams.get("q")
 	if (!q) {
 		throw error(400, "No query provided")
