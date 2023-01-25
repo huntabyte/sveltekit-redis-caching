@@ -21,12 +21,6 @@ export const load: PageServerLoad = async ({ url, fetch, setHeaders }) => {
 			`https://api.themoviedb.org/3/search/movie/?api_key=${TMDB_API_KEY}&query=${q}`,
 		)
 
-		const cacheControl = res.headers.get("cache-control")
-
-		if (cacheControl) {
-			setHeaders({ "cache-control": cacheControl })
-		}
-
 		if (!res.ok) {
 			throw error(res.status, "Could not fetch movies")
 		}
