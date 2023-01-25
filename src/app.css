@@ -1,3 +1,10 @@
 :root {
 	--primary: #01e49a;
 }
+
+.movie-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(5, 1fr);
+	gap: 1rem;
+}

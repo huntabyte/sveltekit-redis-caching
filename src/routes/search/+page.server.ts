@@ -1,6 +1,8 @@
 import type { PageServerLoad } from "./$types"
-import { redis } from "$lib/server/redis"
 import { error } from "@sveltejs/kit"
+import { TMDB_API_KEY } from "$env/static/private"
+
+let apiBill = 0.0
 
 export const load: PageServerLoad = async ({ url, fetch, setHeaders }) => {
 	const q = url.searchParams.get("q")
@@ -9,21 +11,28 @@ export const load: PageServerLoad = async ({ url, fetch, setHeaders }) => {
 	}
 
 	const getMovies = async (q: string) => {
-		const cached = await redis.get(q)
-		setHeaders({ "cache-control": "max-age=604800" })
+		console.log("Made 3rd Party API Call - +$0.01")
+		console.log(
+			"Your monthly total is now $",
+			(apiBill += 0.01).toFixed(2),
+			"\n-------",
+		)
+		const res = await fetch(
+			`https://api.themoviedb.org/3/search/movie/?api_key=${TMDB_API_KEY}&query=${q}`,
+		)
 
-		if (cached) {
-			console.log("Cache hit")
-			return JSON.parse(cached)
+		const cacheControl = res.headers.get("cache-control")
+
+		if (cacheControl) {
+			setHeaders({ "cache-control": cacheControl })
 		}
 
-		console.log("Cache miss")
-		const res = await fetch(`https://search.imdbot.workers.dev/?q=${q}`)
+		if (!res.ok) {
+			throw error(res.status, "Could not fetch movies")
+		}
+
 		const movies = await res.json()
-
-		redis.set(q, JSON.stringify(movies.description), "EX", 604800)
-
-		return movies.description
+		return movies.results
 	}
 
 	return {
