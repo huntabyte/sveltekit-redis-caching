@@ -6,24 +6,20 @@
 </script>
 
 {#if movies.length > 0}
-	<h4>Search results</h4>
-	<div class="grid">
-		<div>
-			{#each movies as movie}
-				<article>
-					<header>
-						<a href={movie['#IMDBURL']}>
-							{movie['#TITLE']}
-						</a>
-					</header>
-					<p>Year: {movie['#YEAR']}</p>
-					<p>Rank: {movie['#RANK']}</p>
-					<p>Actors: {movie['#ACTORS']}</p>
-				</article>
-			{/each}
-		</div>
-		<div />
-		<div />
+	<div class="movie-grid">
+		{#each movies as movie}
+			<article>
+				<header>
+					<h5>
+						{movie.original_title}
+					</h5>
+					<p>{movie.overview.slice(0, 48) + '...'}</p>
+				</header>
+				<p>Released: {movie.release_date}</p>
+				<p>Popularity: {movie.popularity}</p>
+				<p>Vote Average: {movie.vote_average}/10</p>
+			</article>
+		{/each}
 	</div>
 {:else}
 	<p>No movies found</p>
